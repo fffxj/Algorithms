@@ -1,0 +1,7 @@
+#+TITLE: Algorithms
+
+Programming assignments for Algorithms course on Coursera provided
+by University of Princeton.
+
++ [[https://www.coursera.org/learn/introduction-to-algorithms/][Algorithms, PartI]]
++ [[https://www.coursera.org/learn/java-data-structures-algorithms-2/][Algorithms, PartII]]
