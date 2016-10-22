@@ -1,0 +1,4 @@
+
+| Section | Specification                | Score   | Date             |
+|---------+------------------------------+---------+------------------|
+|       1 | [[http://coursera.cs.princeton.edu/algs4/assignments/percolation.html][Percolation]]                  | 100/100 | [2016-10-22 Sat] |
