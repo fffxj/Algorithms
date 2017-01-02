@@ -1,0 +1,241 @@
+#+TITLE: Fundamentals
+
+* DONE 00Intro
+  CLOSED: [2016-12-31 Sat 14:57]
+  - State "DONE"       from "TODO"       [2016-12-31 Sat 14:57]
+** Course overview
+
++ Algorithm
++ Data structure
+
+** Why study algorithms?
+
++ Their impact is broad and far-reaching.
++ Old roots, new opportunities.
++ To solve problems that could not otherwise be addressed.
++ For intellectual stimulation.
++ To become a proficient programmer.
++ They may unlock the secrets of life and of the universe.
++ For fun and profit.
+
+** Resources
+
++ [[http://algs4.cs.princeton.edu/home/][Booksite]]
++ Textbook: Algorithm(4e)
+
+* DONE 15Union-Find
+  CLOSED: [2017-01-01 Sun 15:12]
+  - State "DONE"       from "TODO"       [2017-01-01 Sun 15:12]
+** [Subtext of today’s lecture (and this course)]
+
++ Steps to developing a usable algorithm.
++ The scientific method.
++ Mathematical analysis.
+
+** Dynamic connectivity
+
++ Given a set of N objects.
+  - Union command.
+  - Find/connected query
+
++ Example: PICTURE
+
++ Modeling the objects.
+  - Applications involve manipulating objects of all types.
+  - When programming, convenient to name objects 0 to N-1.
+
++ Modeling the connections.
+  - We assume "is connected to" is an equivalence relation.
+  - Connected components: Maximal set of objects that are mutually connected.
+
++ Union-find data type (API)
+  - Goal: Design efficient data structure for union-find.
+
+#+TABLE_NAME: UF
+|---------------------------------+------------------------------------------------------------------|
+| UF(int N)                       | initialize union-find data structure with N objects (0 to N – 1) |
+| void union(int p, int q)        | add connection between p and q                                   |
+| boolean connected(int p, int q) | are p and q in the same component?                               |
+|---------------------------------+------------------------------------------------------------------|
+| int find(int p)                 | component identifier for p (0 to N – 1)                          |
+| int count()                     | number of components                                             |
+|---------------------------------+------------------------------------------------------------------|
+
++ Dynamic-connectivity client
+
+** Quick-find [eager approach]
+
++ Data structure.
+  - Integer array id[] of length N.
+  - Interpretation: p and q are connected iff they have the same id. 
+
++ Find: Check if p and q have the same id.
+
++ Union: To merge components containing p and q, change all entries whose id
+  equals id[p] to id[q].
+
++ Demo: ANIMATION
+
++ Java implementation: CODE
+
++ Quick-find is to slow.
+  - Cost model: Number of array accesses.
+  - Defect: Union too expensive.
+
+|------------+------------+-------+------+
+| algorithm  | initialize | union | find |
+|------------+------------+-------+------+
+| quick-find | N          | N     | 1    |
+|------------+------------+-------+------+
+
++ Quadratic algorithms do not scale
+  - Rough standard(for now).
+  - Ex. Huge problem for quick-find.
+  - Quadratic algorithms don't scale with technology.
+
+** Union-find [lazy approach]
+
++ Data structure.
+  - Integer array id[] of length N.
+  - Interpretation: id[i] is parent of i.
+  - Root of i is id[id[id[...id[i]...]]].
+
++ Find: Check if p and q have the same root.
+
++ Union: To merge components containing p and q, set the id of p's root to the
+  id of q's root.
+
++ Demo: ANIMATION
+
++ Java implementation: CODE
+
++ Quick-union is also too slow.
+  - Cost model: Number of array accesses.
+  - Quick-find defect: Trees are flat, but too expensive to keep them flat.
+  - Quick-union defect: Trees can get tall.
+
+| algorithm   | initialize | union | find | Comment    |
+|-------------+------------+-------+------+------------|
+| quick-find  | N          | N     | 1    |            |
+| quick-union | N          | N†    | N    | worst case |
+
+** Improvements
+*** Improvement 1: weighting
+
++ Weighted quick-union
+  - Modify quick-union to avoid tall trees.
+  - Keep track of size of each tree(number of objects).
+  - Balance by linking root of smaller tree to root of larger tree(reasonable
+    alternative union by height or "rank")
+
++ Demo: ANIMATION
+
++ Quick-union and weighted quick-union example: PICTURE
+
++ Java implementation: CODE
+  - Data structure: Same as quick-union, but maintain extra array sz[i] to
+    count number of objects in the tree rooted at i.
+  - Find: Identical to quick-union.
+  - Union: Modify quick-union to:
+    + Link root of smaller tree to root of larger tree.
+    + Update the sz[] array.
+
++ Running time.
+  - Find: takes time proportional to depth of p and q.
+  - Union: takes constant time, given roots.
+
++ Proposition: Depth of any node x is at most lgN.
+
++ Pf. When does depth of x increase?
+
+| algorithm   | initialize | union | connected |
+|-------------+------------+-------+-----------|
+| quick-find  | N          | N     | 1         |
+| quick-union | N          | N†    | N         |
+| weighted QU | N          | lgN†  | lgN       |
+
+*** Improvement 2: path compression
+
++ Quick union with path compression: Just after computing the root of p, set
+  the id of each examined node to the node of that root.
+
++ Java implementation: CODE
+  - Two-pass implementation: Add second loop to root() to set id[] of each
+    examined node to the root.
+  - Simpler one-pass variant: Make every other node in path point to its
+    grandparent(thereby halving path length).
+  - In practice. Keeps tree almost completely flat.
+
++ Weighted quick-union with path compression: amortized analysis
+  - Proposition: [Hopcroft-Ulman, Tarjan] Starting from an empty data
+    structure, any sequence of M union-find ops on N objects makes ≤ c ( N + M
+    lg* N ) array accesses.
+  - Linear-time algorithm for M union-find ops on N objects?
+    + In theory, WQUPC is not quite linear.
+    + In practice, WQUPC is linear.
+  - Amazing fact: [Fredman-Saks] No linear-time algorithm exists.
+
+*** Summary
+
++ M union-find operations on a set of N objects
+
+| algorithm                      | worst-case time |
+|--------------------------------+-----------------|
+| quick-find                     | MN              |
+| quick-union                    | MN              |
+| weighted QU                    | N + M lgN       |
+| QU + path compression          | N + M lgN       |
+| weighted QU + path compression | N + M lg*N      |
+
+** Applications
+
++ Union-find applications
+  - Percolation. 
+  - Games (Go, Hex).
+  - Dynamic connectivity. ✓
+  - Least common ancestor.
+  - Equivalence of finite state automata.
+  - Hoshen-Kopelman algorithm in physics.
+  - Hinley-Milner polymorphic type inference.
+  - Kruskal's minimum spanning tree algorithm.
+  - Compiling equivalence statements in Fortran.
+  - Morphological attribute openings and closings.
+  - Matlab's bwlabel() function in image processing.
+
++ Percolation: A model for many physical systems.
+  - N-by-N grid of sites
+  - Each site is open with probability p (or blocked with probability 1 - p).
+  - System percolates iff top and bottom are connected by open sites.
+
+| model                 | system      | vacant site | occupied site | percolates   |
+|-----------------------+-------------+-------------+---------------+--------------|
+| electricity           | electricity | conductor   | insulated     | conducts     |
+| fluid flow            | material    | empty       | blocked       | porous       |
+| social interpretation | population  | person      | empty         | communicates |
+
++ Likelihood of percolation.
+  - Depend on site vacancy probability.
+
++ Percolation phase transition
+  - When N is large, theory guarantees a sharp threshold p*.
+    + p > p*: almost certainly percolates.
+    + p < p*: almost certainly does not percolate.
+  - Q: What is the value of p* ?
+
++ Monte Carlo simulation
+  - Initialize N-by-N whole grid to be blocked.
+  - Declare random sites open until top connected to bottom.
+  - Vacancy percentage estimates p*.
+
++ Dynamic connectivity solution to estimate percolation threshold
+  - How to check whether an N-by-N system percolates?
+    + Create an object for each site and name them 0 to N^2 – 1.
+    + Sites are in same component if connected by open sites.
+    + Percolates iff any site on bottom row is connected to site on top row.
+  - Clever trick: Introduce 2 virtual sites (and connections to top and
+    bottom).
+    + Percolates iff virtual top site is connected to virtual bottom site.
+  - How to model opening a new site?
+    + Mark new site as open; connect it to all of its adjacent open sites.
+  - What is percolation threshold p*?
+    + About 0.592746 for large square lattices.
