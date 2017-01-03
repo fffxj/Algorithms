@@ -239,3 +239,286 @@
     + Mark new site as open; connect it to all of its adjacent open sites.
   - What is percolation threshold p*?
     + About 0.592746 for large square lattices.
+
+* DONE 12Analysis-Of-Algorithms
+  CLOSED: [2017-01-03 Tue 16:01]
+  - State "DONE"       from "TODO"       [2017-01-03 Tue 16:01]
+** Introduction
+
++ Cast of characters.
+  - Programmer
+  - Client
+  - Theoretician
+  - Blocking and tacking
+  - Student
+
++ Running time
+  - Babbage's Analytic Engine
+
++ Reasons to analyze algorithms.
+  - Avoid performance bugs.
+  - Predict performance.
+  - Compare algorithms.
+  - Provide guarantees.
+  - Understand theoretical basis.
+
++ Some algorithmic successes.
+  - Discrete Fourier transform.
+  - N-body simulation.
+
++ The challenge: Will my program be able to solve a large practical input?
+  - Why is my program so slow?
+  - Why does it run out of memory?
+  - Insight. [Knuth 1970s] Use scientific method to understand performance.
+
++ Scientific method applied to analysis of algorithmic.
+  - Scientific method.
+    + Observe
+    + Hypothesize
+    + Predict
+    + Verify
+    + Validate
+  - Principles
+    + Experiment must be reproducible.
+    + Hypotheses must be falsifiable.
+  - Feature of the natural world.
+** Observation
+
++ Example: 3-SUM
+  - 3-SUM: Given N distinct integers, how many triples sum to exactly zero?
+  - Context: Deeply related to problems in computational geometry.
+
++ S-SUM: brute-force algorithm: CODE
+
++ Measuring the running time
+  - Manual: Clock
+  - Automatic: Stopwatch
+
++ Empirical analysis.
+  - Run the program for various input sizes and measure running time.
+    
++ Data analysis.
+  - Standard plot: Plot running time T (N) vs. input size N.
+  - Log-log plot: Plot running time T (N) vs. input size N using log-log scale.
+  - Regression.
+  - Hypothesis.
+
++ Prediction and validation.
+  - Hypothesis.
+  - Predictions.
+  - Observation.
+
++ Doubling hypothesis: Quick way to estimate b in a power-law relationship.
+  - Run program, doubling the size of the input.
+  - Hypothesis: Running time is about a N^b with b = lg ratio.
+  - Caveat: Cannot identify logarithmic factors with doubling hypothesis.
+  - Run the program (for a sufficient large value of N) and solve for a.
+
++ Experimental algorithmics.
+  - System independent effects. determines exponent b in power law.
+    + Algorithm.
+    + Input data.
+  - System dependent effects. determines constant a in power law
+    + Hardware.
+    + Software.
+    + System.
+  - Bad news: Difficult to get precise measurements.
+  - Good news: Much easier and cheaper than other sciences.
+
+** Mathematical models
+
++ Mathematical models for running time.
+  - Total running time: sum of cost * frequency for all operations.
+    + Need to analyze program to determine set of operations.
+    + Cost depends on machine, compiler.
+    + Frequency depends on algorithm, input data.
+  - In principle, accurate mathematical models are available.
+
++ Cost of basic operations: TABLE
+  - Novice mistake: Abusive string concatenation.
+
++ How many instructions as a function of input size N ?
+  - Example: 1-SUM
+  - Example: 2-SUM
+
++ Simplifying the calculations.
+  - Maybe we should just count the ones that are most expensive.
+    
++ Simplification 1: cost model
+  - Use some basic operation as a proxy for running time.
+
++ Simplification 2: tilde notation
+  - Estimate running time (or memory) as a function of input size N.
+  - Ignore lower order terms.
+    + when N is large, terms are negligible 
+    + when N is small, we don't care
+  - Technical definition: The limit of f(N) divide g(N) equals 1.
+
++ Approximately how many array accesses as a function of input size N ?
+  - Example: 2-SUM: ~ N^2
+  - Example: 3-SUM: ~ 1/2 N^3
+  - Bottom line: Use cost model and tilde notation to simplify counts.
+
++ Estimating a discrete sum
+  - Ex1. 1 + 2 + ... + N. ~ 1/2 N^2
+  - Ex2. 1^k + 2^k + ... + N^k. ~ 1/(k+1) N^(k+1)
+  - Ex3. 1 + 1/2 + 1/3 + ... 1/N. ~ lnN
+  - Ex4. 3-sum triple loop. ~ 1/6 N^3
+
++ Mathematical models for running time.
+  - In principle: accurate mathematical models are available.
+  - In practice:
+    + Formulas can be complicated.
+    + Advanced mathematics might be required.
+    + Exact models best left for experts.
+
+** Order-of-growth classifications
+
++ Common order-of-growth classifications
+  - Good news: 1, logN, N, NlogN, N^2, N^3,and 2^N suffices to describe.
+  - Bottom line: Need linear or linearithmic alg to keep pace with Moore's law.
+
++ Binary search.
+  - Goal: Given a sorted array and a key, find index of the key in the array?
+  - Binary search. Compare key against middle entry.
+    + Too small, go left.
+    + Too big, go right.
+    + Equal, found.
+
++ Binary search: Java implementation. CODE
+  - Trivial to implement? NO!NO!
+  - Invariant: If key appears in the array a[], then a[lo] ≤ key ≤ a[hi].
+
++ Binary search: mathematical analysis.
+  - Proposition: Binary search uses at most 1 + lg N key compares to search in
+    a sorted array of size N.
+  - Def: T (N) ≡ # key compares to binary search a sorted subarray of size ≤ N.
+  - Binary search recurrence. T(N) ≤ T(N / 2) + 1 for N > 1, with T(1) = 1.
+  - Pf sketch: T(N) ≤ T(N/2) + 1 ≤ T(N/4) + 1 + 1 ≤ ... ≤ T(N/N) + 1 + ... 1 ≤
+    1 + lgN
+
++ An N^2 logN algorithm for 3-SUM
+  - Sorting-based algorithm.
+    + Step 1: Sort the N numbers.
+    + Step 2: For each pair of numbers a[i] and a[j], binary search for
+      -(a[i] + a[j]).
+  - Analysis: Order of growth is N 2 log N.
+    + Step1: N^2 with insertion sort
+    + Step2: N^ logN with binary search.
+
++ Comparing programs.
+  - Hypothesis: The sorting-based N 2 log N algorithm for 3-SUM is
+    significantly faster in practice than the brute-force N 3 algorithm. 
+  - Guiding principle: Typically, better order of growth ⇒ faster in practice.
+
+** Theory of algorithms
+
++ Types of analyses.
+  - Best case: Lower bound on cost.
+  - Worst case: Upper bound on cost.
+  - Average case: “Expected” cost for random input.
+  - Actual data might not match input model?
+    + Need to understand input to effectively process it.
+    + Approach 1: design for the worst case.
+    + Approach 2: randomize, depend on probabilistic guarantee.
+
++ Theory of algorithms.
+  - Goals.
+    + Establish “difficulty” of a problem.
+    + Develop “optimal” algorithms.
+  - Approach.
+    + Suppress details in analysis: analyze “to within a constant factor”.
+    + Eliminate variability in input model by focusing on the worst case.
+  - Optimal algorithm.
+    + Performance guarantee (to within a constant factor) for any input.
+    + No algorithm can provide a better performance guarantee.
+
++ Commonly-used notations in the theory of algorithms.
+  - Big Theta(Θ): asymptotic order of growth.
+  - Big Oh(O): O(X) and smaller.
+  - Big Omega(Ω): Ω(X) and larger.
+
++ Theory of algorithms: example 1.
+  - Goals.
+    + Establish “difficulty” of a problem and develop “optimal” algorithms.
+    + Ex. 1-SUM = “Is there a 0 in the array? ”
+  - Upper bound. A specific algorithm.
+    + Ex. Brute-force algorithm for 1-SUM: look at every array entry.
+    + Running time of the optimal algorithm for 1-SUM is O(N).
+  - Lower bound. Proof that no algorithm can do better.
+    + Ex. Have to examine all N entries (any unexamined one might 0).
+    + Running time of the optimal algorithm for 1-SUM is Ω(N).
+  - Optimal algorithm.
+    + Lower bound equals upper bound (to within a constant factor).
+    + Ex. Brute-force algorithm for 1-SUM is optimal: its running is Θ(N).
+
++ Theory of algorithms: example 2.
+  - Goals.
+    + Establish “difficulty” of a problem and develop “optimal” algorithms.
+    + ex. 3-SUM.
+  - Upper bound. A specific algorithm.
+    + Ex. Improved algorithm for 3-SUM.
+    + Running time of the optimal algorithm for 3-SUM is O(N^2 logN).
+  - Lower bound. Proof that no algorithm do better.
+    + Ex. Have to examine all N entries to solve 3-SUM.
+    + Running time of the optimal algorithm for solving 3-SUM is Ω(N).
+  - Open problems.
+
++ Algorithm design approach.
+  - Start.
+    + Develop an algorithm.
+    + Prove a lower bound.
+  - Gap?
+    + Lower the upper bound (discover a new algorithm).
+    + Raise the lower bound (more difficult).
+  - Golden Age of Algorithm Design.
+    + 1970s-.
+    + Steadily decreasing upper bounds for many important problems.
+    + Many known optimal algorithms.
+  - Caveats.
+    + Overly pessimistic to focus on worst case?
+    + Need better than “to within a constant factor” to predict performance.
+
++ Commonly-used notations
+  - Common mistake: Interpreting big-Oh as an approximate model.
+  - This course: Focus on approximate models: use Tilde-notation(~).
+
+** Memory
+
++ Basics
+  - Bit: 0 or 1.
+  - Byte: 8 bits.
+  - Megabyte (MB): 1 million or 2^20 bytes.
+  - Gigabyte (Gb): 1 billion or 2^30 bytes.
+  - 64-bit machine. We assume a 64-bit machine with 8 byte pointers.
+    + Can address more memory.
+    + Points use more space.
+
++ Typical memory usage summary.
+  - Total memory usage for a data type value:
+    + Primitive type: 4 bytes for int, 8 bytes for double, ... 
+    + Object reference: 8 bytes.
+    + Array: 24 bytes + memory for each array entry.
+    + Object: 16 bytes + memory for each instance variable ・+ 8 bytes if inner
+      class (for pointer to enclosing class).
+    + Padding: round up to multiple of 8 bytes.
+  - Shallow memory usage: Don't count referenced objects.
+  - Deep memory usage: If array entry or instance variable is a reference, add
+    memory (recursively) for referenced object.
+  - Example: WeightedQuickUnionUF
+
+** [Turning the crank: summary]
+
++ Empirical analysis.
+  - Execute program to perform experiments.
+  - Assume power law and formulate a hypothesis for running time.
+  - Model enables us to make predictions.
++ Mathematical analysis.
+  - Analyze algorithm to count frequency of operations.
+  - Use tilde notation to simplify analysis.
+  - Model enables us to explain behavior.
++ Scientific method.
+  - Mathematical model is independent of a particular system; applies to
+    machines not yet built.
+  - Empirical analysis is necessary to validate mathematical models and to make
+    predictions.
