@@ -9,10 +9,7 @@ public class QuickFindUF {
         for (int i = 0; i < n; ++i) id[i] = i;
     }
     public boolean connected(int p, int q) {
-        return find(p) == find(q);
-    }
-    public int find(int i) {
-        return id[i];
+        return id[p] == id[q];
     }
     public void union(int p, int q) {
         int pid = id[p];

@@ -1,11 +1,11 @@
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdIn;
 
-public class WeightedQuickUnionUF {
-    private int[] id;
-    private int[] sz;
+public class UF {
+    private int []id;
+    private int []sz;
 
-    public WeightedQuickUnionUF(int n) {
+    public UF(int n) {
         id = new int[n];
         sz = new int[n];
         for (int i = 0; i < n; ++i) {
@@ -14,7 +14,10 @@ public class WeightedQuickUnionUF {
         }
     }
     private int root(int i) {
-        while (i != id[i]) i = id[i];
+        while (id[i] != i) {
+            id[i] = id[id[i]];
+            i = id[i];
+        }
         return i;
     }
     public boolean connected(int p, int q) {
@@ -29,7 +32,7 @@ public class WeightedQuickUnionUF {
 
     public static void main(String[] args) {
         int N = StdIn.readInt();
-        WeightedQuickUnionUF uf = new WeightedQuickUnionUF(N);
+        UF uf = new UF(N);
         while (!StdIn.isEmpty()) {
             int p = StdIn.readInt();
             int q = StdIn.readInt();
