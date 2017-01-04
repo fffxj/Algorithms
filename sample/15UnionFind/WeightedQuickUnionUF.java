@@ -7,9 +7,10 @@ public class QuickUnionUF {
 
     public QuickUnionUF(int n) {
         id = new int[n];
-        for (int i = 0; i < n; ++i) id[i] = i;
-        sz = new int[n];
-        for (int i = 0; i < n; ++i) sz[i] = i;
+        for (int i = 0; i < n; ++i) {
+            id[i] = i;
+            sz[i] = 1;
+        }
     }
     private int root(int i) {
         while (i != id[i]) i = id[i];
