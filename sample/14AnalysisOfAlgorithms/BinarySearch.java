@@ -19,9 +19,7 @@ public class BinarySearch {
     public static void main(String[] args) {
         In in = new In(args[0]);
         int[] a = in.readAllInts();
-
         Arrays.sort(a);
-
         while (!StdIn.isEmpty()) {
             int key = StdIn.readInt();
             StdOut.println(rank(a, key));
