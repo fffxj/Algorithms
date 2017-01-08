@@ -240,7 +240,7 @@
   - What is percolation threshold p*?
     + About 0.592746 for large square lattices.
 
-* DONE 12Analysis-Of-Algorithms
+* DONE 14Analysis-Of-Algorithms
   CLOSED: [2017-01-03 Tue 16:01]
   - State "DONE"       from "TODO"       [2017-01-03 Tue 16:01]
 ** Introduction
@@ -522,3 +522,275 @@
     machines not yet built.
   - Empirical analysis is necessary to validate mathematical models and to make
     predictions.
+
+* DONE 13Stacks-And-Queues
+  CLOSED: [2017-01-08 Sun 23:19]
+  - State "DONE"       from "TODO"       [2017-01-08 Sun 23:19]
+** [Stacks and queues]
+
++ Fundamental data types.
+  - Value: collection of objects.
+  - Operations: insert, remove, iterate, test if empty.
+  - Intent is clear when we insert.
+  - Which item do we remove?
+
++ Stack. Examine the item most recently added. LIFO.
++ Queue. Examine the item least recently added. FIFO.
+
+** [Client, implementation, interface]
+
++ Separate interface and implementation.
+  - Ex: stack, queue, bag, priority queue, symbol table, union-find,...
+
++ Benefits.
+  - Client can't know details of implementation =>
+    client has many implementation from which to choose.
+  - Implementation can't know details of client needs =>
+    many clients can re-use the same implementation.
+  - Design: creates modular, reusable libraries.
+  - Performance: use optimized implementation which it matters.
+
++ Client: program using operations defined in interface. 
++ Implementation: actual code implementing operations. 
++ Interface: description of data type, basic operations.
+ 
+** Stacks
+
++ Stack API.
+  - Warmup API: Stack of strings data type.
+|------------------------+--------------------------------------------------|
+| StackOfStrings()       | create an empty stack                            |
+| void push(String item) | insert a new string onto stack                   |
+| String pop()           | remove and return the string most recently added |
+| boolean isEmpty()      | is the stack empty?                              |
+|------------------------+--------------------------------------------------|
+| int size()             | number of strings on the stack                   |
+|------------------------+--------------------------------------------------|
+
++ Stack test client.
+  - Warmup client: Reverse sequence of strings from standard input. CODE.
+
++ Stack: linked-list representation.
+  - Maintain pointer to first node in a linked list; insert/remove from front.
+  - Stack pop: linked-list implementation
+  - Stack push: linked-list implementation
+  - Stack: linked-list implementation in Java: CODE
+
++ Stack: linked-list implementation performance.
+  - Proposition: Every operation takes constant time in the worst case.
+  - Proposition: A stack with N items uses ~ 40 N bytes.
+  - Remark. This accounts for the memory for the stack (but not the memory for
+    strings themselves, which the client owns).
+
++ Stack: array implementation.
+  - Array implementation of a stack.
+    + Use array s[] to store N items on stack.
+    + push(): add new item at s[N].
+    + pop(): remove item from s[N-1].
+  - Defect. Stack overflows when N exceeds capacity. [stay tuned]
+  - Stack: array implementation: CODE
+
++ Stack considerations.
+  - Overflow and underflow.
+    + Underflow: throw exception if pop from an empty stack. 
+    + Overflow: use resizing array for array implementation. [stay tuned]
+  - Null items: We allow null items to be inserted.
+  - Loitering: Holding a reference to an object when it is no longer needed.
+
+** Resizing arrays
+
++ Stack: resizing-array implementation.
+  - Problem: Requiring client to provide capacity does not implement API! 
+  - Q: How to grow and shrink array?
+
++ Q: How to grow array?
+  - First try.
+    + push(): increase size of array s[] by 1. 
+    + pop(): decrease size of array s[] by 1.
+  - Too expensive.
+    + Need to copy all items to a new array.
+    + Inserting first N items takes time proportional to 1 + 2 + ... + N ~ N^2
+      / 2.
+  - A: If array is full, create a new array of twice the size, and copy items. 
+  - Java implementation: CODE
+  - Cost of inserting first N items: N + (2 + 4 + 8 + ... + N) ~ 3N.
+
++ Q: How to shrink array?
+  - First try.
+    + push(): double size of array s[] when array is full.
+    + pop(): halve size of array s[] when array is one-half full.
+  - Too expensive in worst case.
+    + Consider push-pop-push-pop-... sequence when array is full.
+    + Each operation takes time proportional to N.
+  - Efficient solution.
+    + push(): double size of array s[] when array is full.
+    + pop(): halve size of array s[] when array is one-quarter full.
+  - Java implementation: CODE    
+  - Invariant. Array is between 25% and 100% full.
+
++ Stack: resizing-array implementation trace: PICTURE
+
++ Stack resizing-array implementation: performance.
+  - Amortized analysis: Average running time per operation over a worst-case
+    sequence of operations. 
+  - Proposition: Starting from an empty stack, any sequence of M push and pop
+    operations takes time proportional to M. 
+
+|-----------+------+-------+-----------|
+|           | best | worst | amortized |
+|-----------+------+-------+-----------|
+| construct | 1    | 1     | 1         |
+| push      | 1    | N     | 1         |
+| pop       | 1    | N     | 1         |
+| size      | 1    | 1     | 1         |
+|-----------+------+-------+-----------|
+
++ Stack resizing-array implementation: memory usage.
+  - Proposition. Uses between ~ 8 N and ~ 32 N bytes to represent a stack with
+    N items.
+    + ~ 8 N when full.
+    + ~ 32 N when one-quarter full.
+
++ Stack implementations: resizing array vs. linked list.
+  - Tradeoffs: Can implement a stack with either resizing array or linked list;
+    save a link to the list client can use interchangeably. Which one is
+    better?
+  - Linked-list implementation.
+    + Every operation takes constant time in the worst case.
+    + Uses extra time and space to deal with the links.
+  - Resizing-array implementation.
+    + Every operation takes constant amortized time.
+    + Less wasted space.
+
+** Queues
+
++ Queue API.
+
+|---------------------------+---------------------------------------------------|
+| QueueOfString()           | create an empty queue                             |
+| void enqueue(String item) | insert a new string onto queue                    |
+| String dequeue()          | remove and return the string least recently added |
+| boolean isEmpty()         | is the queue empty?                               |
+|---------------------------+---------------------------------------------------|
+| int size()                | number of strings on the queue                    |
+|---------------------------+---------------------------------------------------|
+
++ Queue: linked-list representation
+  - Maintain pointer to first and last nodes in a linked list; insert/remove
+    from opposite ends.
+  - Remark. Identical code to linked-list stack pop().
+  - Remark. Special cases for empty queue
+  - Java implementation: CODE
+
++ Queue: resizing array implementation
+  - Use array q[] to store items in queue.
+  - enqueue(): add new item at q[tail].
+  - dequeue(): remove item from q[head].
+  - Update head and tail modulo the capacity.
+  - Add resizing array.
+
+** Generics
+
++ Parameterized stack.
+  - We implemented: StackOfStrings. 
+  - We also want: StackOfURLs, StackOfInts, StackOfVans, ....
+
++ Bad Attempt 1. Implement a separate stack class for each type.
++ Bad Attempt 2. Implement a stack with items of type Object.
++ Good Attempt 3. Java generics.
+  - Guiding principles. Welcome compile-time errors; avoid run-time errors.
+
++ Generic stack: linked-list implementation. CODE
++ Generic stack: array implementation. CODE
+  - Generic array creation not allowed in Java, Use the ugly cast.
+  - Unchecked cast.
+
++ Generic data types: autoboxing
+  - Wrapper type.
+    + Each primitive type has a wrapper object type.
+    + Ex: Integer is wrapper type for int.
+  - Autoboxing: Automatic cast between a primitive type and its wrapper.
+  - Bottom line: Client code can use generic stack for any type of data.
+
+** Iterators
+
++ Iteration.
+  - Design challenge: Support iteration over stack items by client, without
+    revealing the internal representation of the stack. 
+  - Java solution: Make stack implement the java.lang.Iterable interface.
+
++ Iterators.
+  - Q. What is an Iterable ?
+  - A. Has a method that returns an Iterator.
+  - Q. What is an Iterator ?
+  - A. Has methods hasNext() and next().
+  - Q. Why make data structures Iterable ? 
+  - A. Java supports elegant client code.
+
++ Stack iterator: linked-list implementation. CODE
++ Stack iterator: array implementation. CODE
+
++ Bag API.
+  - Main application: Adding items to a collection and iterating (when order
+    doesn't matter).
+  - Implementation: Stack (without pop) or queue (without dequeue).
+
+|---------------------------+-------------------------------|
+| Bag()                     | create an empty bag           |
+| void add(Item x)          | insert a new item onto bag    |
+| int size()                | number of items in bag        |
+| Iterable<Item> iterator() | iterator for all items in bag |
+|---------------------------+-------------------------------|
+** Applications
+
++ Java collections library
+  - List interface: java.util.List is API for an sequence of items.
+  - Implementations.
+    + java.util.ArrayList uses resizing array;
+    + java.util.LinkedList uses linked list.
+  - java.util.Stack.
+    + Supports push(), pop(), and and iteration.
+    + Extends java.util.Vector, which implements java.util.List
+    + interface from previous slide, including, get() and remove(). Bloated and
+      poorly-designed API.
+  - Best practices: Use our implementations of Stack, Queue, and Bag.
+
++ War story (from Assignment 1)
+  - Lesson: Don't use a library until you understand its API!
+  - This course: Can't use a library until we've implemented it in class.
+
++ Stack applications
+  - Parsing in a compiler.
+  - Java virtual machine.
+  - Undo in a word processor.
+  - Back button in a Web browser.
+  - PostScript language for printers. 
+  - Implementing function calls in a compiler.
+  - ...
+
++ Function calls.
+  - How a compiler implements a function.
+    + Function call: push local environment and return address.
+    + Return: pop return address and local environment.
+  - Recursive function: Function that calls itself.
+  - Note: Can always use an explicit stack to remove recursion.
+
++ Arithmetic expression evaluation.
+  - Goal: Evaluate infix expression.
+  - Two-stack algorithm. [E. W. Dijkstra]
+    + Value: push onto the value stack.
+    + Operator: push onto the operator stack.
+    + Left parenthesis: ignore.
+    + Right parenthesis: pop operator and two values; push the result of
+      applying the operator to those values onto the operand stack.
+  - Context: An interpreter!
+      
++ Dijkstra's two-stack algorithm demo: ANIMATION
+
++ Arithmetic expression evaluation: CODE
+
++ Correctness.
+  - When algorithm encounters an operator surrounded by two values within
+    parentheses, it leaves the result on the value stack.
+  - Extensions: More ops, precedence order, associativity.
+
