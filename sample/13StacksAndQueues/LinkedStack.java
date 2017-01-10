@@ -2,10 +2,8 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdIn;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class LinkedStack<Item> implements Iterable<Item> {
-    private int N;
     private Node first;
 
     private class Node {
@@ -28,7 +26,9 @@ public class LinkedStack<Item> implements Iterable<Item> {
         return item;
     }
 
-    public Iterator<Item> iterator() { return new ListIterator(); }
+    public Iterator<Item> iterator() {
+        return new ListIterator();
+    }
     private class ListIterator implements Iterator<Item> {
         private Node current = first;
 
@@ -46,7 +46,7 @@ public class LinkedStack<Item> implements Iterable<Item> {
         while (!StdIn.isEmpty()) {
             String s = StdIn.readString();
             if (s.equals("-")) StdOut.print(stack.pop() + " ");
-            else               stack.push(s);
+            else               stack.push(s);            
         }
     }
 }
