@@ -1,0 +1,245 @@
+#+TITLE: Sorting
+
+* DONE 21Elementary-Sorts
+  CLOSED: [2017-01-12 Thu 21:15]
+  - State "DONE"       from "TODO"       [2017-01-12 Thu 21:15]
+** Rules of the game
+
++ Sorting problem.
+  - Ex. Student records in a university.
+  - Sort. Rearrange array of N items into ascending order.
+
++ Sample sort client.
+  - Goal: Sort any type of data.
+  - Sort random real numbers in ascending order: CODE
+  - Sort strings from file in alphabetical order: CODE
+  - Sort the files in a given directory by filename: CODE
+
++ Callbacks.
+  - Goal: Sort any type of data.
+  - Callback = reference to executable code.
+    + Client passes array of objects to sort() function.
+    + The sort() function calls back object's compareTo() method as needed.
+  - Implementing callbacks.
+
++ Total order.
+  - A total order a binary relation ≤ that satisfies:
+    + Antisymmetry: if v ≤ w and w ≤ v, then v = w.
+    + Transitivity: if v ≤ w and w ≤ x, then v ≤ x.
+    + Totality: either v ≤ w or w ≤ v or both.
+  - Surprising but true: The <= operator for double is not a total order. (!)
+
++ Comparable API.
+  - Implement compareTo() so that v.compareTo(w).
+    + Is a total order.
+    + Returns a negative integer, zero, or positive integer if v is less than,
+      equal to, or greater than w, respectively.
+    + Throws an exception if incompatible types (or either is null).
+  - Built-in comparable types. Integer, Double, String, Date, File, ...
+  - User-defined comparable types. Implement the Comparable interface.
+
++ Implementing the Comparable interface
+  - Date data type: CODE
+
++ Two useful sorting abstractions.
+  - Helper functions: Refer to data through compares and exchanges.
+  - Less: Is item v less than w?
+  - Exchange: Swap item in array a[] at index i with the one at index j.
+
++ Testing.
+  - Goal. Test if an array is sorted.
+  - Q: If the sorting algorithm passes the test, did it correctly sort the
+    array? 
+  - A: Yes. If only use the less and exch function.
+
+** Selection sort
+
++ Selection sort demo.
+  - In iteration i, find index min of smallest remaining entry.
+  - Swap a[i] and a[min].
+
++ Selection sort.
+  - Algorithm. ↑ scans from left to right.
+  - Invariants.
+    + Entries the left of ↑ (including ↑) fixed and in ascending order.
+    + No entry to right of ↑ is smaller than any entry to the left of ↑.
+
++ Selection sort inner loop.
+  - To maintain algorithm invariants:
+    + Move the pointer to the right.
+    + Identify index of minimum entry on right.
+    + Exchange into position.
+
++ Selection sort: Java implementation: CODE
+
++ Selection sort: mathematical analysis.
+  - Proposition: Selection sort uses (N–1) + (N–2) + ... + 1 + 0 ~ N^2 / 2
+    compares and N exchanges.
+  - PICTURE
+  - Running time insensitive to input. Quadratic time, even if input is sorted.
+  - Data movement is minimal. Linear number of exchanges.
+  - ANIMATIONS
+
+** Insertion sort
+
++ Insertion sort demo
+  - In iteration i, swap a[i] with each larger entry to its left.
+
++ Insertion sort
+  - Algorithm. ↑ scans from left to right.
+  - Invariants.
+    + Entries to the left of ↑ (including ↑) are in ascending order.
+    + Entries to the right of ↑ have not yet been seen.
+
++ Insertion sort inner loop.
+  - To maintain algorithm invariants:
+    + Move the pointer to the right.
+    + Moving from right to left, exchange a[i] with each larger entry to its
+      left.
+
++ Insertion sort: Java implementation: CODE
+
++ Insertion sort: mathematical analysis.
+  - Proposition. To sort a randomly-ordered array with distinct keys, insertion
+    sort uses ~ 1⁄4 N^2 compares and ~ 1⁄4 N^2 exchanges on average.
+  - Pf. Expect each entry to move halfway back
+  - PICTURE
+  - ANIMATION
+
++ Insertion sort: best and worst case.
+  - Best case. If the array is in ascending order, insertion sort makes N - 1
+    compares and 0 exchanges.
+  - Worst case. If the array is in descending order (and no duplicates),
+    insertion sort makes ~ 1⁄2 N^2 compares and ~ 1⁄2 N^2 exchanges.
+
++ Insertion sort: partially-sorted arrays.
+  - Def: An inversion is a pair of keys that are out of order.
+  - Def: An array is partially sorted if the number of inversions is ≤ c N.
+    + Ex 1. A subarray of size 10 appended to a sorted subarray of size N.
+    + Ex 2. An array of size N with only 10 entries out of place.
+
++ Proposition: For partially-sorted arrays, insertion sort runs in linear time.
+  Pf. Number of exchanges equals the number of inversions.
+
+** Shell sort
+
++ Shellsort overview.
+  - Idea: Move entries more than one position at a time by h-sorting the array.
+  - Shellsort: [Shell 1959] h-sort array for decreasing sequence of values
+    of h.
+
++ h-sorting
+  - How to h-sort an array? Insertion sort, with stride length h. 
+  - Why insertion sort?
+    + Big increments => small subarray.
+    + Small increments => nearly in order. [stay tuned]
+
++ Shellsort example: increments 7, 3, 1. PICTURE
+
++ Shellsort: intuition.
+  - Proposition: A g-sorted array remains g-sorted after h-sorting it.
+  - Challenge: Prove this fact—it's more subtle than you'd think!
+
++ Shellsort: which increment sequence to use?
+  - Powers of two. 1, 2, 4, 8, 16, 32, ... 
+    + No.
+  - Powers of two minus one. 1, 3, 7, 15, 31, 63, ... 
+    + Maybe.
+  - 3x + 1. 1, 4, 13, 40, 121, 364, ... 
+    + OK. Easy to compute.
+  - Sedgewick. 1, 5, 19, 41, 109, 209, 505, 929, 2161, 3905, ... 
+    + Good. Tough to beat in empirical studies.
+
++ Shellsort: Java implementation. CODE
++ Shellsort: visual trace.
++ Shellsort: animation.
+
++ Shellsort: analysis.
+  - Proposition. The worst-case number of compares used by shellsort with the
+    3x+1 increments is O(N ^ (3/2)).
+  - Remark. Accurate model has not yet been discovered (!)
+
++ Why are we interested in shellsort?
+  - Example of simple idea leading to substantial performance gains.
+  - Useful in practice.
+  - Simple algorithm, nontrivial performance, interesting questions
+  - Lesson: Some good algorithms are still waiting discovery.
+    
+** Shuffling
+
++ How to shuffle an array.
+  - Goal: Rearrange array so that result is a uniformly random permutation.
+    
++ Shuffle sort.
+  - Generate a random real number for each array entry.
+  - Sort the array.
+  - Proposition: Shuffle sort produces a uniformly random permutation of the
+    input array, provided no duplicate values.
+
++ Knuth shuffle demo.
+  - In iteration i, pick integer r between 0 and i uniformly at random.
+  - Swap a[i] and a[r].
+  - Proposition: [Fisher-Yates 1938] Knuth shuffling algorithm produces a
+    uniformly random permutation of the input array in linear time.
+  - Java implementation: CODE
+
++ War story (online poker).
+  - Bug 1. Random number r never 52 ⇒ 52nd card can't end up in 52nd place.
+  - Bug 2. Shuffle not uniform (should be between 1 and i).
+  - Bug 3. random() uses 32-bit seed ⇒ 232 possible shuffles.
+  - Bug 4. Seed = milliseconds since midnight ⇒ 86.4 million shuffles.
+  - Bottom line. Shuffling a deck of cards is hard!
+
+** Convex hull
+
++ The convex hull of a set of N points is the smallest perimeter fence
+  enclosing the points.
++ Convex hull output: Sequence of vertices in counterclockwise order.
+
++ Convex hull: mechanical algorithm
+  - Hammer nails perpendicular to plane; stretch elastic rubber band around
+    points.
+
++ Convex hull application: motion planning.
+  - Robot motion planning: Find shortest path in the plane from s to t that
+    avoids a polygonal obstacle.
+  - Fact: Shortest path is either straight line from s to t or it is one of two
+    polygonal chains of convex hull.
+
++ Convex hull application: farthest pair.
+  - Farthest pair problem: Given N points in the plane, find a pair of points
+    with the largest Euclidean distance between them.
+  - Fact: Farthest pair of points are extreme points on convex hull.
+
++ Convex hull: geometric properties.
+  - Fact: Can traverse the convex hull by making only counterclockwise turns.
+  - Fact: The vertices of convex hull appear in increasing order of polar angle
+    with respect to point p with lowest y-coordinate. 
+
++ Graham scan demo.
+  - Choose point p with smallest y-coordinate.
+  - Sort points by polar angle with p.
+  - Consider points in order; discard unless it create a ccw turn.
+
++ Graham scan: implementation challenges.
+  - Q. How to find point p with smallest y-coordinate?
+  - A. Define a total order, comparing by y-coordinate. [next lecture]
+  - Q. How to sort points by polar angle with respect to p ? 
+  - A. Define a total order for each point p. [next lecture]
+  - Q. How to determine whether p1 → p2 → p3 is a counterclockwise turn? 
+  - A. Computational geometry. [next two slides]
+  - Q. How to sort efficiently?
+  - A. Mergesort sorts in N log N time. [next lecture]
+  - Q. How to handle degeneracies (three or more points on a line)? 
+  - A. Requires some care, but not hard. [see booksite]
+
++ Implementing ccw.
+  - CCW: Given three points a, b, and c, is a → b → c a counterclockwise
+    turn?
+  - Determinant (or cross product) gives 2x signed area of planar triangle.
+    + 2 * Area(a, b, c) = (bx −ax)(cy −ay) − (by −ay)(cx −ax)
+    + If signed area > 0, then a → b → c is counterclockwise.
+    + If signed area < 0, then a → b → c is clockwise.
+    + If signed area = 0, then a → b → c are collinear.
+
++ Graham scan: implementation. CODE
