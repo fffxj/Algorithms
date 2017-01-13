@@ -4,20 +4,21 @@ import edu.princeton.cs.algs4.StdRandom;
 
 public class Shell {
     public static void sort(Comparable[] a) {
-        int N = a.length;
+        int n = a.length;
 
         int h = 1;
-        while (h < N/3) h = h*3 + 1;p
+        while (h < n/3) h = h*3 + 1;
         
         while (h >= 1) {
-            for (int i = h; i < N; ++i) {
+            for (int i = h; i < n; ++i) {
                 for (int j = i; j >= h && less(a[j], a[j-h]); j -= h) {
                     exch(a, j, j-h);
                 }
             }
-            
+            assert isHsorted(a, h);
             h = h/3;
         }
+        assert isSorted(a);
     }
 
     private static boolean less(Comparable v, Comparable w) {
@@ -41,15 +42,21 @@ public class Shell {
         }
         return true;
     }
+    private static boolean isHsorted(Comparable[] a, int h) {
+        for (int i = h; i < a.length; ++i) {
+            if (less(a[i], a[i-h])) return false;
+        }
+        return true;
+    }
 
     public static void main(String[] args) {
-        int N = 20;
-        Integer[] a = new Integer[N];
-        for (int i = 0; i < N; i++) {
-            a[i] = StdRandom.uniform(0, N);
+        int n = 20;
+        Integer[] a = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = StdRandom.uniform(0, n);
         }
         show(a);
-        sort(a);
-        if (isSorted(a)) show(a);
+        Shell.sort(a);
+        show(a);
     }
 }

@@ -4,14 +4,16 @@ import edu.princeton.cs.algs4.StdRandom;
 
 public class Selection {
     public static void sort(Comparable[] a) {
-        int N = a.length;
-        for (int i = 0; i < N; ++i) {
+        int n = a.length;
+        for (int i = 0; i < n; ++i) {
             int min = i;
-            for (int j = i+1; j < N; ++j) {
+            for (int j = i+1; j < n; ++j) {
                 if (less(a[j], a[min])) min = j;
             }
             exch(a, i, min);
+            isSorted(a, 0, i);
         }
+        isSorted(a);
     }
      
     private static boolean less(Comparable v, Comparable w) {
@@ -30,20 +32,23 @@ public class Selection {
         StdOut.println();
     }
     private static boolean isSorted(Comparable[] a) {
-        for (int i = 1; i < a.length; ++i) {
+        return isSorted(a, 0, a.length - 1);
+    }
+    private static boolean isSorted(Comparable[] a, int lo, int hi) {
+        for (int i = lo+1; i <= hi; ++i) {
             if (less(a[i], a[i-1])) return false;
         }
         return true;
     }
 
     public static void main(String[] args) {
-        int N = 20;
-        Integer[] a = new Integer[N];
-        for (int i = 0; i < N; i++) {
-            a[i] = StdRandom.uniform(0, N);
+        int n = 20;
+        Integer[] a = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = StdRandom.uniform(0, n);
         }
         show(a);
-        sort(a);
-        if (isSorted(a)) show(a);
+        Selection.sort(a);
+        show(a);
     }
 }
