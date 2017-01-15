@@ -243,3 +243,167 @@
     + If signed area = 0, then a → b → c are collinear.
 
 + Graham scan: implementation. CODE
+* DONE 22Mergesort
+  CLOSED: [2017-01-15 Sun 21:24]
+  - State "DONE"       from "TODO"       [2017-01-15 Sun 21:24]
+** [Two classic sorting algorithms]
+
++ Critical components in the world’s computational infrastructure.
+  - Mergesort.
+  - Quicksort.
+
+** Mergesort
+
++ Basic plan.
+  - Divide array into two halves.
+  - Recursively sort each half.
+  - Merge two halves.
+
++ Abstract in-place merge demo.
+  - Goal: Given two sorted subarrays a[lo] to a[mid] and a[mid+1] to a[hi],
+    replace with sorted subarray a[lo] to a[hi].
+  - Java implementation: CODE
+
++ Assertions.
+  
++ Mergesort.
+  - Java implementation: CODE
+  - Trace: PICTURE
+  - ANIMATION
+
++ Mergesort: number of compares and array accesses.
+  - Proposition: Mergesort uses at most N lg N compares and 6 N lg N array
+    accesses to sort any array of size N.
+  - Pf sketch: The number of compares C (N) and array accesses A (N) to
+    mergesort an array of size N satisfy the recurrences:
+    + C (N) ≤ C ([N / 2]) + C ([N / 2]) + N for N > 1, with C (1) = 0.
+    + A (N) ≤ A ([N / 2]) + A ([N / 2]) + 6 N for N > 1, with A (1) = 0.
+    + Divide-and-conquer recurrence: proof by picture.
+    + Divide-and-conquer recurrence: proof by expansion.
+    + Divide-and-conquer recurrence: proof by induction.
+
++ Mergesort analysis: memory.
+  - Proposition: Mergesort uses extra space proportional to N.
+  - Pf: The array aux[] needs to be of size N for the last merge.
+  - Def: A sorting algorithm is in-place if it uses ≤ c log N extra memory. 
+  - Ex: Insertion sort, selection sort, shellsort.
+  - Challenge for the bored. In-place merge. [Kronrod, 1969]
+
++ Mergesort: practical improvements.
+  - Use insertion sort for small subarrays.
+    + Mergesort has too much overhead for tiny subarrays.
+    + Cutoff to insertion sort for ≈ 7 items.
+  - Stop if already sorted.
+    + Is biggest item in first half ≤ smallest item in second half? 
+    + Helps for partially-ordered arrays.
+  - Eliminate the copy to the auxiliary array: Save time (but not space) by
+    switching the role of the input and auxiliary array in each recursive call.  
+
++ Mergesort: visualization: PICTURE
+
+** Bottom-up mergesort
+
++ Basic plan.
+  - Pass through array, merging subarrays of size 1.
+  - Repeat for subarrays of size 2, 4, 8, 16...
+
++ Bottom-up mergesort: Java implementation: CODE
++ Bottom-up mergesort: visual trace: PICTURE
+
+** Sorting complexity
+
++ Complexity of sorting.
+  - Computational complexity: Framework to study efficiency of algorithms for
+    solving a particular problem X. 
+  - Model of computation: Allowable operations.
+  - Cost model: Operation count(s).
+  - Upper bound: Cost guarantee provided by some algorithm for X
+  - Lower bound: Proven limit on cost guarantee of all algorithms for X.
+    Optimal algorithm. Algorithm with best possible cost guarantee for X.
+
++ Example: sorting.
+  - Model of computation: decision tree. ・
+  - Cost model: # compares.
+  - Upper bound: ~ N lg N from mergesort.
+  - Lower bound: ~ N lg N.
+    + Proposition: Any compare-based sorting algorithm must use at least lg ( N
+      ! ) ~ N lg N compares in the worst-case. 
+    + Pf.
+  - Optimal algorithm = mergesort.
+
++ Complexity results in context.
+  - Compares? Mergesort is optimal with respect to number compares.
+  - Space? Mergesort is not optimal with respect to space usage.
+  - Lessons. Use theory as a guide.
+    + Ex. Design sorting algorithm that guarantees 1⁄2 N lg N compares? 
+    + Ex. Design sorting algorithm that is both time- and space-optimal?
+  - Lower bound may not hold if the algorithm has information about: 
+    + The initial order of the input: Partially-ordered arrays. insertion sort
+      requires only N-1 compares if input array is sorted
+    + The distribution of key values: Duplicate keys. stay tuned for 3-way
+      quicksort
+    + The representation of the keys: Digital properties of keys. stay tuned
+      for radix sorts
+
+** Comparators
+
++ Goal:
+  - Sort music library by artist name.
+  - Sort music library by song name.
+
++ Comparator interface.
+  - Comparable interface: sort using a type's natural order.
+  - Comparator interface: sort using an alternate order.
+    + Required property. Must be a total order.
+      
++ Comparator interface: system sort.
+  - To use with Java system sort:
+    + Create Comparator object.
+    + Pass as second argument to Arrays.sort().
+  - Bottom line: Decouples the definition of the data type from the definition
+    of what it means to compare two objects of that type.
+
++ Comparator interface: using with our sorting libraries.
+  - To support comparators in our sort implementations:
+    + Use Object instead of Comparable.
+    + Pass Comparator to sort() and less() and use it in less().
+  - CODE.
+
++ Comparator interface: implementing.
+  - To implement a comparator:
+    + Define a (nested) class that implements the Comparator interface.
+    + Implement the compare() method.
+  - CODE.
+
++ Polar order.
+  - Polar order: Given a point p, order points by polar angle they make with p.
+  - Application: Graham scan algorithm for convex hull.
+  - High-school trig solution: Compute polar angle θ w.r.t. p using atan2().
+    + Drawback: Evaluating a trigonometric function is expensive.
+  - A ccw-based solution.
+    + If q1 is above p and q2 is below p, then q1 makes smaller polar angle.
+    + If q1 is below p and q2 is above p, then q1 makes larger polar angle.
+    + Otherwise, ccw(p, q1, p2) identifies which of q1 or q2 makes large angle.
+  - Comparator interface: polar order. CODE
+
+** Stability
+
++ Stability
+  - A stable sort preserves the relative order of items with equal keys.
+  - Q. Which sorts are stable?
+  - A. Insertion sort and mergesort (but not selection sort or shellsort).
+  - Note: Need to carefully check code ("less than" vs. "less than or equal
+    to").
+
++ Stability
+  - Proposition. Insertion sort is stable.
+    + Pf. Equal items never move past each other.
+  - Proposition. Selection sort is not stable.
+    + Pf by counterexample. Long-distance exchange might move an item past some
+      equal item.
+  - Proposition. Shellsort sort is not stable.
+    + Pf by counterexample. Long-distance exchanges.
+  - Proposition. Mergesort is stable.
+    + Pf. Suffices to verify that merge operation is stable.
+    + Proposition. Merge operation is stable.
+    + Pf. Takes from left subarray if equal keys.
