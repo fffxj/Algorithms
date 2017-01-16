@@ -54,13 +54,13 @@ public class MergeBU {
     }
 
     public static void main(String[] args) {
-        int N = 20;
-        Integer[] a = new Integer[N];
-        for (int i = 0; i < N; i++) {
-            a[i] = StdRandom.uniform(0, N);
+        int n = 20;
+        Integer[] a = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = StdRandom.uniform(0, n);
         }
         show(a);
-        sort(a);
-        if (isSorted(a)) show(a);
+        MergeBU.sort(a);
+        show(a);
     }
 }

@@ -9,7 +9,7 @@ public class Merge {
 
         for (int k = lo; k <= hi; ++k)
             aux[k] = a[k];
-
+        
         int i = lo, j = mid+1;
         for (int k = lo; k <= hi; ++k) {
             if      (i > mid)              a[k] = aux[j++];
@@ -30,8 +30,8 @@ public class Merge {
     public static void sort(Comparable[] a) {
         Comparable[] aux = new Comparable[a.length];
         sort(a, aux, 0, a.length-1);
+        assert isSorted(a);
     }
-
 
     private static boolean less(Comparable v, Comparable w) {
         return v.compareTo(w) < 0;
@@ -53,13 +53,13 @@ public class Merge {
     }
 
     public static void main(String[] args) {
-        int N = 20;
-        Integer[] a = new Integer[N];
-        for (int i = 0; i < N; i++) {
-            a[i] = StdRandom.uniform(0, N);
+        int n = 20;
+        Integer[] a = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = StdRandom.uniform(0, n);
         }
         show(a);
-        sort(a);
-        if (isSorted(a)) show(a);
+        Merge.sort(a);
+        show(a);
     }
 }
