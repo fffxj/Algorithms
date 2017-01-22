@@ -23,12 +23,14 @@ public class Quick {
     public static void sort(Comparable[] a) {
         StdRandom.shuffle(a);
         sort(a, 0, a.length-1);
+        assert isSorted(a);
     }
-    public static void sort(Comparable[] a, int lo, int hi) {
+    private static void sort(Comparable[] a, int lo, int hi) {
         if (hi <= lo) return;
         int j = partition(a, lo, hi);
         sort(a, lo, j-1);
         sort(a, j+1, hi);
+        assert isSorted(a, lo, hi);
     }
     public static Comparable select(Comparable[] a, int k) {
         StdRandom.shuffle(a);
@@ -68,15 +70,16 @@ public class Quick {
     }
 
     public static void main(String[] args) {
-        int N = 20;
-        Integer[] a = new Integer[N];
-        for (int i = 0; i < N; i++) {
-            a[i] = StdRandom.uniform(0, N);
+        int n = 20;
+        Integer[] a = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = StdRandom.uniform(0, n);
         }
         show(a);
-        sort(a);
-        if (isSorted(a)) show(a);
+        Quick.sort(a);
+        show(a);
 
+        StdRandom.shuffle(a);
         for (int i = 0; i < a.length; ++i) {
             int ith = (int) Quick.select(a, i);
             StdOut.print(ith + " ");

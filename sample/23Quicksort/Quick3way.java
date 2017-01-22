@@ -6,6 +6,7 @@ public class Quick3way {
     public static void sort(Comparable[] a) {
         StdRandom.shuffle(a);
         sort(a, 0, a.length-1);
+        isSorted(a);
     }
     public static void sort(Comparable[] a, int lo, int hi) {
         if (hi <= lo) return;
@@ -14,13 +15,14 @@ public class Quick3way {
         int i = lo;
         while (i <= gt) {
             int cmp = a[i].compareTo(v);
-            if (cmp < 0)      exch(a, i++, lt++);
+            if      (cmp < 0) exch(a, i++, lt++);
             else if (cmp > 0) exch(a, i, gt--);
             else              i++;
         }
 
         sort(a, lo, lt-1);
         sort(a, gt+1, hi);
+        isSorted(a, lo, hi);
     }
     
     private static boolean less(Comparable v, Comparable w) {
@@ -49,13 +51,13 @@ public class Quick3way {
     }
 
     public static void main(String[] args) {
-        int N = 20;
-        Integer[] a = new Integer[N];
-        for (int i = 0; i < N; i++) {
-            a[i] = StdRandom.uniform(0, N);
+        int n = 20;
+        Integer[] a = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = StdRandom.uniform(0, n);
         }
         show(a);
-        sort(a);
-        if (isSorted(a)) show(a);
+        Quick3way.sort(a);
+        show(a);
     }
 }
