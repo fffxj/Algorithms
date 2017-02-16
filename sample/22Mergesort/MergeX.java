@@ -13,8 +13,8 @@ public class MergeX {
         for (int k = lo; k <= hi; ++k) {
             if      (i > mid)              dst[k] = src[j++];
             else if (j > hi)               dst[k] = src[i++];
-            else if (less(src[i], src[j])) dst[k] = src[i++];
-            else                           dst[k] = src[j++];
+            else if (less(src[j], src[i])) dst[k] = src[j++];
+            else                           dst[k] = src[i++];
         }
 
         assert isSorted(dst, lo, hi);
