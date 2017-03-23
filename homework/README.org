@@ -4,3 +4,4 @@
 |       2 | [[http://coursera.cs.princeton.edu/algs4/assignments/queues.html][Deques and Randomized Queues]] | 100/100 | [2016-10-31 Mon] |
 |       3 | [[http://coursera.cs.princeton.edu/algs4/assignments/collinear.html][Collinear Points]]             | 100/100 | [2017-02-04 Sat] |
 |       4 | [[http://coursera.cs.princeton.edu/algs4/assignments/8puzzle.html][8 Puzzle]]                     | 100/100 | [2017-03-03 Fri] |
+|       5 | [[http://coursera.cs.princeton.edu/algs4/assignments/kdtree.html][Kd-Trees]]                     | 100/100 | [2017-03-23 Thu] |
