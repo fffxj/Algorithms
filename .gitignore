@@ -1,6 +1,3 @@
-*.DS_Store
-
 *.class
 
-*.html
-TODO.org
+lecture*/
