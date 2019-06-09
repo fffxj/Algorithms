@@ -1,0 +1,7 @@
+| Section | Specification                    | Score   | Date             |
+|---------+----------------------------------+---------+------------------|
+|       1 | [[http://coursera.cs.princeton.edu/algs4/assignments/wordnet.html][WordNet]]                          | 100/100 | <2019-02-11 Mon> |
+|       2 | [[http://coursera.cs.princeton.edu/algs4/assignments/seam.html][Seam Carving]]                     | 100/100 | <2019-03-29 Fri> |
+|       3 | [[http://coursera.cs.princeton.edu/algs4/assignments/baseball.html][Baseball Elimination]]             | 100/100 | <2019-04-09 Tue> |
+|       4 | [[http://coursera.cs.princeton.edu/algs4/assignments/boggle.html][Boggle]]                           | 100/100 | <2019-04-22 Mon> |
+|       5 | [[http://coursera.cs.princeton.edu/algs4/assignments/burrows.html][Burrows–Wheeler Data Compression]] | 100/100 | <2019-06-10 Mon> |
