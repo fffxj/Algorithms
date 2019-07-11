@@ -19,7 +19,6 @@ applications and scientific performance analysis of Java implementations.
 - Collinear Points [100/100]
 - 8 Puzzle [100/100]
 - Kd-Trees [100/100]
-
 - WordNet [100/100]
 - Seam Carving [100/100]
 - Baseball Elimination[100/100]
