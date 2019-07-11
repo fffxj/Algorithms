@@ -12,23 +12,6 @@ public class WordNet {
     private final HashMap<Integer, String> id2synset;
     private final SAP sap;
 
-    // check whether a digraph is a single rooted DAG
-    private boolean isValid(Digraph G) {
-        DirectedCycle dc = new DirectedCycle(G);
-        if (dc.hasCycle())
-            return false;
-
-        int num = 0;
-        for (int i = 0; i < G.V(); i++) {
-            Iterator<Integer> iter = G.adj(i).iterator();
-            if (!iter.hasNext())
-                num++;
-        }
-        if (num != 1)
-            return false;
-        return true;
-    }
-
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) {
         if (synsets == null || hypernyms == null)
@@ -38,9 +21,9 @@ public class WordNet {
         id2synset = new HashMap<Integer, String>();
 
         In in = new In(synsets);
-        String line = null;
         int id = 0;
-        while ((line = in.readLine()) != null) {
+        String line = in.readLine();
+        for (; line != null; line = in.readLine()) {
             String[] items = line.split(",");
             id = Integer.parseInt(items[0]);
             String synset = items[1];
@@ -62,7 +45,8 @@ public class WordNet {
 
         in = new In(hypernyms);
         Digraph wordnet = new Digraph(id + 1);
-        while ((line = in.readLine()) != null) {
+        line = in.readLine();
+        for (; line != null; line = in.readLine()) {
             String[] items = line.split(",");
             int v = Integer.parseInt(items[0]);
             for (int i = 1; i < items.length; i++) {
@@ -75,6 +59,23 @@ public class WordNet {
             throw new IllegalArgumentException();
 
         sap = new SAP(wordnet);
+    }
+
+    // check whether a digraph is a single rooted DAG
+    private boolean isValid(Digraph G) {
+        DirectedCycle dc = new DirectedCycle(G);
+        if (dc.hasCycle())
+            return false;
+
+        int num = 0;
+        for (int i = 0; i < G.V(); i++) {
+            Iterator<Integer> iter = G.adj(i).iterator();
+            if (!iter.hasNext())
+                num++;
+        }
+        if (num != 1)
+            return false;
+        return true;
     }
 
     // returns all WordNet nouns

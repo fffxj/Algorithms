@@ -57,7 +57,8 @@ public class SAP {
         return dist;
     }
 
-    // a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
+    // a common ancestor of v and w that participates in a shortest ancestral path;
+    // -1 if no such path
     public int ancestor(int v, int w) {
         if (v < 0 || v > G.V() - 1)
             throw new IllegalArgumentException();

@@ -6,7 +6,8 @@ import java.util.Arrays;
 public class BurrowsWheeler {
     private static final int R = 256;
 
-    // apply Burrows-Wheeler transform, reading from standard input and writing to standard output
+    // apply Burrows-Wheeler transform,
+    // reading from standard input and writing to standard output
     public static void transform() {
         String str = BinaryStdIn.readString();
         CircularSuffixArray csa = new CircularSuffixArray(str);
@@ -21,7 +22,8 @@ public class BurrowsWheeler {
         BinaryStdOut.close();
     }
 
-    // apply Burrows-Wheeler inverse transform, reading from standard input and writing to standard output
+    // apply Burrows-Wheeler inverse transform,
+    // reading from standard input and writing to standard output
     public static void inverseTransform() {
         int first = BinaryStdIn.readInt();
         String str = BinaryStdIn.readString();

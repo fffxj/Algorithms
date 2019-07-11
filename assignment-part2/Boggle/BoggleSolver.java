@@ -31,11 +31,13 @@ public class BoggleSolver {
     private boolean contains(String key) {
         return contains(dict, key);
     }
+
     private boolean contains(Node root, String key) {
         Node x = get(root, key, 0);
         if (x == null) return false;
         return x.isString;
     }
+
     private Node get(Node x, String key, int d) {
         if (x == null) return null;
         char c = key.charAt(d);
@@ -49,6 +51,7 @@ public class BoggleSolver {
     private void add(String key) {
         dict = add(dict, key, 0);
     }
+
     private Node add(Node x, String key, int d) {
         char c = key.charAt(d);
         if (x == null) { x = new Node(); x.c = c; x.d = d; }
@@ -60,10 +63,12 @@ public class BoggleSolver {
     }
 
     // Is there any word in the dict that starts with the given prefix?
-    // 0 no prefix, no prefix*
-    // 1 no prefix*, but prefix (aka contains prefix)
-    // 2 no prefix, but prefix* (aka contains prefix*)
-    // 3 prefix*, prefix
+    /*
+     * 0 - no prefix, no prefix*
+     * 1 - no prefix*, but prefix (aka contains prefix)
+     * 2 - no prefix, but prefix* (aka contains prefix*)
+     * 3 - prefix*, prefix
+     */
     private int prefixQuery(String prefix) {
         if (curr == null)
             curr = track(dict, prefix);
@@ -79,6 +84,7 @@ public class BoggleSolver {
             return 2;
         }
     }
+
     private Node track(Node x, String key) {
         if (x == null) return null;
         int d = x.d;

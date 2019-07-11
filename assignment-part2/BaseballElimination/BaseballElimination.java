@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.HashMap;
 
 public class BaseballElimination {
-    private final int numberOfTeams;
+    private final int numTeams;
     private final String[] teams;
     private final HashMap<String, Integer> team2id;    
     private final int[] wins;
@@ -21,15 +21,15 @@ public class BaseballElimination {
     public BaseballElimination(String filename) {
         In in = new In(filename);
 
-        numberOfTeams = in.readInt();
-        this.teams = new String[numberOfTeams];
+        numTeams = in.readInt();
+        this.teams = new String[numTeams];
         this.team2id = new HashMap<String, Integer>();
-        this.wins = new int[numberOfTeams];
-        this.losses = new int[numberOfTeams];
-        this.remaining = new int[numberOfTeams];
-        this.games = new int[numberOfTeams][numberOfTeams];
+        this.wins = new int[numTeams];
+        this.losses = new int[numTeams];
+        this.remaining = new int[numTeams];
+        this.games = new int[numTeams][numTeams];
 
-        for (int id = 0; id < numberOfTeams; ++id) {
+        for (int id = 0; id < numTeams; ++id) {
             String team = in.readString();
             teams[id] = team;
             team2id.put(team, id);
@@ -37,7 +37,7 @@ public class BaseballElimination {
             losses[id] = in.readInt();
             remaining[id] = in.readInt();
 
-            for (int n = 0; n < numberOfTeams; ++n) {
+            for (int n = 0; n < numTeams; ++n) {
                 games[id][n] = in.readInt();
             }
         }
@@ -45,7 +45,7 @@ public class BaseballElimination {
     
     // number of teams
     public int numberOfTeams() {
-        return this.numberOfTeams;
+        return this.numTeams;
     }
 
     // all teams
@@ -89,25 +89,25 @@ public class BaseballElimination {
             throw new IllegalArgumentException();
 
         int x = team2id.get(team);
-        for (int i = 0; i < numberOfTeams; ++i) {
+        for (int i = 0; i < numTeams; ++i) {
             if (wins[x] + remaining[x] < wins[i])
                 return true;
         }
         
-        int numberOfGames = numberOfTeams * (numberOfTeams - 1) / 2;
-        int numberOfVertices = numberOfTeams + numberOfGames + 2;
+        int numGames = numTeams * (numTeams - 1) / 2;
+        int numVertices = numTeams + numGames + 2;
         int s = 0;
-        int t = numberOfVertices - 1;
+        int t = numVertices - 1;
         int v = 1;
-        FlowNetwork fn = new FlowNetwork(numberOfVertices);
-        for (int i = 0; i < numberOfTeams; ++i) {
-            for (int j = i + 1; j < numberOfTeams; ++j) {
+        FlowNetwork fn = new FlowNetwork(numVertices);
+        for (int i = 0; i < numTeams; ++i) {
+            for (int j = i + 1; j < numTeams; ++j) {
                 fn.addEdge(new FlowEdge(s, v, games[i][j]));
-                fn.addEdge(new FlowEdge(v, numberOfGames + i + 1, Integer.MAX_VALUE));
-                fn.addEdge(new FlowEdge(v, numberOfGames + j + 1, Integer.MAX_VALUE));
+                fn.addEdge(new FlowEdge(v, numGames + i + 1, Integer.MAX_VALUE));
+                fn.addEdge(new FlowEdge(v, numGames + j + 1, Integer.MAX_VALUE));
                 ++v;
             }
-            fn.addEdge(new FlowEdge(numberOfGames + i + 1, t, wins[x] + remaining[x] - wins[i]));
+            fn.addEdge(new FlowEdge(numGames + i + 1, t, wins[x] + remaining[x] - wins[i]));
         }
 
         new FordFulkerson(fn, s, t);
@@ -126,27 +126,27 @@ public class BaseballElimination {
         LinkedList<String> subset = new LinkedList<String>();
         int x = team2id.get(team);
 
-        for (int i = 0; i < numberOfTeams; ++i) {
+        for (int i = 0; i < numTeams; ++i) {
             if (wins[x] + remaining[x] < wins[i])
                 subset.add(teams[i]);
         }
         if (!subset.isEmpty())
             return subset;
 
-        int numberOfGames = numberOfTeams * (numberOfTeams - 1) / 2;
-        int numberOfVertices = numberOfTeams + numberOfGames + 2;
+        int numGames = numTeams * (numTeams - 1) / 2;
+        int numVertices = numTeams + numGames + 2;
         int s = 0;
-        int t = numberOfVertices - 1;
+        int t = numVertices - 1;
         int v = 1;
-        FlowNetwork fn = new FlowNetwork(numberOfVertices);
-        for (int i = 0; i < numberOfTeams; ++i) {
-            for (int j = i + 1; j < numberOfTeams; ++j) {
+        FlowNetwork fn = new FlowNetwork(numVertices);
+        for (int i = 0; i < numTeams; ++i) {
+            for (int j = i + 1; j < numTeams; ++j) {
                 fn.addEdge(new FlowEdge(s, v, games[i][j]));
-                fn.addEdge(new FlowEdge(v, numberOfGames + i + 1, Integer.MAX_VALUE));
-                fn.addEdge(new FlowEdge(v, numberOfGames + j + 1, Integer.MAX_VALUE));
+                fn.addEdge(new FlowEdge(v, numGames + i + 1, Integer.MAX_VALUE));
+                fn.addEdge(new FlowEdge(v, numGames + j + 1, Integer.MAX_VALUE));
                 ++v;
             }
-            fn.addEdge(new FlowEdge(numberOfGames + i + 1, t, wins[x] + remaining[x] - wins[i]));
+            fn.addEdge(new FlowEdge(numGames + i + 1, t, wins[x] + remaining[x] - wins[i]));
         }
 
         FordFulkerson ff = new FordFulkerson(fn, s, t);
@@ -157,9 +157,9 @@ public class BaseballElimination {
         }
 
         if (flag) {
-            for (int i = numberOfGames + 1; i < t; ++i) {
+            for (int i = numGames + 1; i < t; ++i) {
                 if (ff.inCut(i))
-                    subset.add(teams[i - numberOfGames - 1]);
+                    subset.add(teams[i - numGames - 1]);
             }
             return subset;
         } else {
